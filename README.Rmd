@@ -1,12 +1,20 @@
 ---
-title: "ISBS Online Symposium"
-subtitle: "Data Preparation"
-output: github_document
+title: ""
+subtitle: "Preparation"
+output: 
+  github_document:
+    html_preview: true
 ---
 
-<div style="text-align: center;">
-  <img src="isbs-logo.png" alt="ISBS Logo" width="200" style="margin-right: 50px;">
-  <img src="fda-logo.png" alt="FDA Logo" width="200">
+<div style="background-color:#f5f5f5; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 20px;">
+  <h1 style="margin-bottom: 0;">ISBS Online Symposium</h1>
+  <p style="font-size: 1.2em; color: #555; margin-top: 5px;">
+    Functional Data Analysis for Sports Biomechanics
+  </p>
+  <div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 15px;">
+    <img src="isbs-logo.png" alt="ISBS Logo" width="120">
+    <img src="fda-logo.png" alt="FDA Logo" width="120">
+  </div>
 </div>
 
 ```{r setup, include=FALSE}
@@ -32,6 +40,8 @@ Since we are working within a project, we just have to point to the *relative pa
 GRF_data <- read.csv(file = "data/GRF_F_V_RAW_right.csv")
 ```
 
+---
+
 ***Aside:***
 
 There exist faster functions in specialized packages for reading in large csv files. Let's time trial `read.csv()` with `read_csv()` from the `readr` package and `fread` from the `data.table` package. From just one run it seems `fread()` is marginally faster than `read_csv()`, but both are orders of magnitude faster than `read.csv()`.
@@ -44,6 +54,21 @@ time_2 <- system.time(GRF_data_2 <- readr::read_csv(file = "data/GRF_F_V_RAW_rig
 time_3 <- system.time(GRF_data_3 <- data.table::fread(file = "data/GRF_F_V_RAW_right.csv"))
 print(paste0("read.csv = ", round(time_1["elapsed"], 2), " seconds; read_csv = ", round(time_2["elapsed"], 2), " seconds; fread = ", round(time_3["elapsed"], 2), " seconds"))
 ```
+
+---
+
+The data is read in as a data frame, which is useful for storing tabular data where the columns are heterogenous in nature (e.g., contains some numeric and some factors or strings).
+
+```{r}
+class(GRF_data)
+```
+
+This dataset contains over $75000$ rows, 
+
+```{r}
+dim(GRF_data)
+```
+
 
 ## Data Preprocessing
 

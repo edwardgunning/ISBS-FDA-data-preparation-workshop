@@ -13,7 +13,7 @@ ISBS Online Symposium
 Welcome to this workshop on Functional Data Analysis (FDA) for Sports
 Biomechanics, as part of the ISBS Online Symposium. This document serves
 as a guide for working with time-series data and preparing it for
-functional analysis in R.
+functional data analysis in R.
 
 ## Reading Time-Series Data
 
