@@ -5,7 +5,8 @@
 ISBS Online Symposium
 </h1>
 <p style="font-size: 1.2em; color: #555; margin-top: 5px;">
-Functional Data Analysis for Sports Biomechanics
+Functional Data Analysis for Sports Biomechanics – <i>Data
+Preparation</i>
 </p>
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 15px;">
@@ -34,7 +35,7 @@ and can be downloaded directly
 [here](https://figshare.com/ndownloader/files/22063200). Each time
 series is stored as a row of the CSV file, with associated metadata
 including subject ID, session number, and trial ID. Since trials have
-different durations, some rows contain missing values (NAs) where the
+different durations, some rows contain missing values (`NA`s) where the
 recorded data length varies. Our goal is to preprocess these data,
 preparing them for functional data analysis.
 
@@ -65,6 +66,7 @@ time_2 <- system.time(GRF_data_2 <- readr::read_csv(file = "data/GRF_F_V_RAW_rig
                                                     col_types = c(rep("i", 3), rep("n", 405))))
 time_3 <- system.time(GRF_data_3 <- data.table::fread(file = "data/GRF_F_V_RAW_right.csv"))
 print(paste0("read.csv = ", round(time_1["elapsed"], 2), " seconds; read_csv = ", round(time_2["elapsed"], 2), " seconds; fread = ", round(time_3["elapsed"], 2), " seconds"))
+rm(list = paste0("GRF_data_", 1:3))
 ```
 
 ------------------------------------------------------------------------
@@ -98,24 +100,52 @@ dim(GRF_data) # check dimensions again
 
     ## [1] 200 408
 
-## Data Preprocessing
+We can also split the data out into the first three columns (subject,
+session and trial IDs) and the remaining $405$ columns which include the
+sampled time series. Since the remaining $405$ columns are all numeric
+containing time series values, it is appropriate to store them as a
+matrix.
+
+``` r
+meta_df <- GRF_data[, 1:3] # first three columns
+GRF_matrix <- as.matrix(GRF_data[, - c(1:3)])  # remaining columns
+```
+
+We can also create a $405$-dimensional vector representing the time
+argument. Since these data are sampled at $250$ Hz, we have that each
+time difference is $1/250$.
+
+``` r
+frames_per_second <- 250
+seconds_per_frame <- 1/frames_per_second
+time_seq <- seq(0, seconds_per_frame * (405 - 1), by = seconds_per_frame)
+```
+
+We can use the `matplot()` function to plot the columns of a matrix, so
+we need to transpose (rotate) `GRF_matrix` when passing it as an
+argument using the `t()` function.
+
+``` r
+matplot(x = time_seq,
+        y = t(GRF_matrix), 
+        type = "b", 
+        cex = 0.5, 
+        pch = 20, 
+        ylab = "vGRF",
+        xlab = "time (seconds)")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+## Data Preprocessing and Preparation
 
 Discussion on normalization, interpolation, and smoothing techniques.
 
 ## Data Export
 
-## Functional Data Analysis Basics
+## Summarixing the Data (basics)
 
 Overview of mean functions, variance functions, and functional PCA.
-
-## Example Code
-
-``` r
-# Placeholder for example analysis
-plot(cars)
-```
-
-![](README_files/figure-gfm/example-1.png)<!-- -->
 
 ## Conclusion
 
