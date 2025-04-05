@@ -1,20 +1,10 @@
-
-<div style="background-color:#f5f5f5; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 20px;">
-
-<h1 style="margin-bottom: 0;">
 ISBS Online Symposium
-</h1>
-<p style="font-size: 1.2em; color: #555; margin-top: 5px;">
-Functional Data Analysis for Sports Biomechanics – <i>Data
-Preparation</i>
-</p>
+================
 
-<div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 15px;">
+<div style="text-align: center;">
 
-    <img src="https://raw.githubusercontent.com/edwardgunning/ISBS-FDA-data-preparation-workshop/main/isbs-logo.png" alt="ISBS Logo" width="120">
-    <img src="fda-logo.png" alt="FDA Logo" width="120">
-
-</div>
+<img src="isbs-logo.png" alt="ISBS Logo" width="200" style="margin-right: 50px;">
+<img src="fda-logo.png" alt="FDA Logo" width="200">
 
 </div>
 
