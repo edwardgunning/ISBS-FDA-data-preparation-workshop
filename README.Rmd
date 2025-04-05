@@ -63,11 +63,17 @@ The data is read in as a data frame, which is useful for storing tabular data wh
 class(GRF_data)
 ```
 
-This dataset contains over $75000$ rows, 
+This dataset contains over $75,000$ rows. This meaans its a fantastic resource for statistics and machine learning applications. However, for the purpose of this tutorial, we'll take a random sample of $200$ rows to make it more manageable.
 
 ```{r}
-dim(GRF_data)
+dim(GRF_data) # check dimensions
+sample_inds <- sample(seq_len(length.out = nrow(GRF_data)), size = 200)
+GRF_data <- GRF_data[sample_inds, ]
+dim(GRF_data) # check dimensions again
 ```
+
+
+
 
 
 ## Data Preprocessing

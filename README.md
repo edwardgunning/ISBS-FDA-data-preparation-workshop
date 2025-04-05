@@ -1,10 +1,19 @@
+
+<div style="background-color:#f5f5f5; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 20px;">
+
+<h1 style="margin-bottom: 0;">
 ISBS Online Symposium
-================
+</h1>
+<p style="font-size: 1.2em; color: #555; margin-top: 5px;">
+Functional Data Analysis for Sports Biomechanics
+</p>
 
-<div style="text-align: center;">
+<div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 15px;">
 
-<img src="isbs-logo.png" alt="ISBS Logo" width="200" style="margin-right: 50px;">
-<img src="fda-logo.png" alt="FDA Logo" width="200">
+    <img src="isbs-logo.png" alt="ISBS Logo" width="120">
+    <img src="fda-logo.png" alt="FDA Logo" width="120">
+
+</div>
 
 </div>
 
@@ -40,6 +49,8 @@ Since we are working within a project, we just have to point to the
 GRF_data <- read.csv(file = "data/GRF_F_V_RAW_right.csv")
 ```
 
+------------------------------------------------------------------------
+
 ***Aside:***
 
 There exist faster functions in specialized packages for reading in
@@ -55,6 +66,37 @@ time_2 <- system.time(GRF_data_2 <- readr::read_csv(file = "data/GRF_F_V_RAW_rig
 time_3 <- system.time(GRF_data_3 <- data.table::fread(file = "data/GRF_F_V_RAW_right.csv"))
 print(paste0("read.csv = ", round(time_1["elapsed"], 2), " seconds; read_csv = ", round(time_2["elapsed"], 2), " seconds; fread = ", round(time_3["elapsed"], 2), " seconds"))
 ```
+
+------------------------------------------------------------------------
+
+The data is read in as a data frame, which is useful for storing tabular
+data where the columns are heterogenous in nature (e.g., contains some
+numeric and some factors or strings).
+
+``` r
+class(GRF_data)
+```
+
+    ## [1] "data.frame"
+
+This dataset contains over $75,000$ rows. This meaans its a fantastic
+resource for statistics and machine learning applications. However, for
+the purpose of this tutorial, we’ll take a random sample of $200$ rows
+to make it more manageable.
+
+``` r
+dim(GRF_data) # check dimensions
+```
+
+    ## [1] 75732   408
+
+``` r
+sample_inds <- sample(seq_len(length.out = nrow(GRF_data)), size = 200)
+GRF_data <- GRF_data[sample_inds, ]
+dim(GRF_data) # check dimensions again
+```
+
+    ## [1] 200 408
 
 ## Data Preprocessing
 
