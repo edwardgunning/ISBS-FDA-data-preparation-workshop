@@ -11,7 +11,7 @@ Preparation</i>
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 15px;">
 
-    <img src="isbs-logo.png" alt="ISBS Logo" width="120">
+    <img src="https://raw.githubusercontent.com/edwardgunning/ISBS-FDA-data-preparation-workshop/main/isbs-logo.png" alt="ISBS Logo" width="120">
     <img src="fda-logo.png" alt="FDA Logo" width="120">
 
 </div>
@@ -61,11 +61,11 @@ one run it seems `fread()` is marginally faster than `read_csv()`, but
 both are orders of magnitude faster than `read.csv()`.
 
 ``` r
-time_1 <- system.time(GRF_data_1 <- read.csv(file = "data/GRF_F_V_RAW_right.csv"))
-time_2 <- system.time(GRF_data_2 <- readr::read_csv(file = "data/GRF_F_V_RAW_right.csv", 
+runtime_1 <- system.time(GRF_data_1 <- read.csv(file = "data/GRF_F_V_RAW_right.csv"))
+runtime_2 <- system.time(GRF_data_2 <- readr::read_csv(file = "data/GRF_F_V_RAW_right.csv", 
                                                     col_types = c(rep("i", 3), rep("n", 405))))
-time_3 <- system.time(GRF_data_3 <- data.table::fread(file = "data/GRF_F_V_RAW_right.csv"))
-print(paste0("read.csv = ", round(time_1["elapsed"], 2), " seconds; read_csv = ", round(time_2["elapsed"], 2), " seconds; fread = ", round(time_3["elapsed"], 2), " seconds"))
+runtime_3 <- system.time(GRF_data_3 <- data.table::fread(file = "data/GRF_F_V_RAW_right.csv"))
+print(paste0("read.csv = ", round(runtime_1["elapsed"], 2), " seconds; read_csv = ", round(runtime_2["elapsed"], 2), " seconds; fread = ", round(runtime_3["elapsed"], 2), " seconds"))
 rm(list = paste0("GRF_data_", 1:3))
 ```
 
@@ -139,7 +139,14 @@ matplot(x = time_seq,
 
 ## Data Preprocessing and Preparation
 
-Discussion on normalization, interpolation, and smoothing techniques.
+In this section, we’ll discuss a number of important issues in data
+preparation.
+
+### Issue 1: Smoothing
+
+### Issue 2: Time Normalization
+
+- Refs: Gellar, Sangalli etc., do not require
 
 ## Data Export
 
