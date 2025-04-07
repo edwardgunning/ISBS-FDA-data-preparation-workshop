@@ -1,6 +1,5 @@
 ---
 title: "ISBS Online Symposium"
-subtitle: "Preparation"
 output: github_document
 ---
 
@@ -11,20 +10,68 @@ output: github_document
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.asp = 1, fig.width = 5, fig.height = 5)
 ```
 
 ## Introduction
 
 Welcome to this workshop on Functional Data Analysis (FDA) for Sports Biomechanics, as part of the ISBS Online Symposium. This document serves as a guide for working with time-series data and preparing it for functional data analysis in R.
 
-## Reading Time-Series Data
+* This tutorial <u>**does**</u> cover, basic data import, formatting, preparation and inspecting techniques. It will teach you how to go from raw biomechanical time series' to functional data that are ready to be analysed.
+
+* This tutorial <u>**does not**</u> cover more advanced analytical techniques from FDA -- we have [a book](https://link.springer.com/book/10.1007/978-3-031-68862-1) and [material from a full one-day course](https://github.com/edwardgunning/ISBS-Short-Course) for this.
+
+* We encourage participants to ask questions and discuss how the material relates to their own work, either during the presentation by using the "raise hand" function ion zoom, in the chat, or during the dedicated question time at the end.
+
+## 🖥 Computing Pre-requisites
+
+### R and RStudio
+
+If you want to follow along and program yourself, either retrospectively or in real time, you should have the following software installed:
+
+* **The R Language for Statistical Computing**
+  * It can be downloaded from [https://cloud.r-project.org](https://cloud.r-project.org)
+  * For further assistance see [this video by RStudio education](https://vimeo.com/203516510)
+
+* **The RStudio Integrated Development Environment (IDE)**
+  * It can be downloaded from [https://posit.co/](https://posit.co/)
+  * For further assistance see [this video by RStudio education](https://vimeo.com/203516510) (**Note**: The RStudio company has changed to Posit PBC, so there may be some minor differences)
+
+
+**Note**: If you are unable to install R and RStudio, you can work with a free, lite web version of RStudio called [*posit cloud*](https://posit.cloud/). Watch [this video from Posit PBC](https://www.youtube.com/watch?v=-fzwm4ZhVQQ) to set up an account and get started.
+
+We also recommend setting up an RStudio project to work and store your files for this workshop in -- see [this helpful guide on setting up projects by Posit PBC](https://support.posit.co/hc/en-us/articles/200526207-Using-RStudio-Projects).
+
+**IMPORTANT**: **We do not require any previous knowledge of R programming or FDA**. We have structured the lecture and practical sessions in such a way that all levels of experience will be catered for. However, if interested, our favourite (free!) resources for getting up to speed with R are:
+
+* [R for Data Science (2nd Edition)](https://r4ds.hadley.nz/) by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund.
+
+* [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/) by Roger D. Peng.
+
+
+# ⏱️ Schedule
+
+These times are in British Standard Time (BST):
+
+| Time | Topic | Lead |
+|-------:|:------|:---------:|
+| $12.00$ - $12.25$ | Welcome, Introduction and Background | DH | 
+| $12.25$ - $13.30$ | Practical Tutorial | EG |
+| $13.30$ - $14.00$ | Q&A and Discussion | DH, EG & JW |
+
+---
+---
+---
+
+# Main Tutorial
+
+### Reading Time-Series Data
 
 In this workshop, we will use the GaitRec dataset, specifically the right leg vertical ground reaction force (vGRF) data.
 The data are stored in a comma separated value (CSV) file on the [GaitRec Figshare link](https://figshare.com/articles/dataset/GRF_F_V_RAW_right/11394825?backTo=%2Fcollections%2FGaitRec_A_large-scale_ground_reaction_force_dataset_of_healthy_and_impaired_gait%2F4788012&file=22063200) and can be downloaded directly [here](https://figshare.com/ndownloader/files/22063200).
 Each time series is stored as a row of the CSV file, with associated metadata including subject ID, session number, and trial ID. Since trials have different durations, some rows contain missing values (`NA`s) where the recorded data length varies. Our goal is to preprocess these data, preparing them for functional data analysis.
 
-### Step 1: Read in the csv file:
+### Read in the csv file:
 
 There are many options to read in text files in R (e.g., comma or tab separated values files). Here, we'll use base R `read.csv()` function.
 Since we are working within a project, we just have to point to the *relative path* to the file.
@@ -45,11 +92,17 @@ runtime_1 <- system.time(GRF_data_1 <- read.csv(file = "data/GRF_F_V_RAW_right.c
 runtime_2 <- system.time(GRF_data_2 <- readr::read_csv(file = "data/GRF_F_V_RAW_right.csv", 
                                                     col_types = c(rep("i", 3), rep("n", 405))))
 runtime_3 <- system.time(GRF_data_3 <- data.table::fread(file = "data/GRF_F_V_RAW_right.csv"))
-print(paste0("read.csv = ", round(runtime_1["elapsed"], 2), " seconds; read_csv = ", round(runtime_2["elapsed"], 2), " seconds; fread = ", round(runtime_3["elapsed"], 2), " seconds"))
-rm(list = paste0("GRF_data_", 1:3))
+
+# Examine the results:
+print(paste0("read.csv = ", round(runtime_1["elapsed"], 2), " seconds; read_csv = ",
+             round(runtime_2["elapsed"], 2), " seconds; fread = ",
+             round(runtime_3["elapsed"], 2), " seconds"))
+rm(list = paste0("GRF_data_", 1:3)) # remove the created data objects from our environments
 ```
 
 ---
+
+### Inspecting the loaded data
 
 The data is read in as a data frame, which is useful for storing tabular data where the columns are heterogenous in nature (e.g., contains some numeric and some factors or strings).
 
@@ -70,7 +123,6 @@ We can also split the data out into the first three columns (subject, session an
 Since the remaining $405$ columns are all numeric containing time series values, it is appropriate to store them as a matrix.
 
 
-
 ```{r}
 meta_df <- GRF_data[, 1:3] # first three columns
 GRF_matrix <- as.matrix(GRF_data[, - c(1:3)])  # remaining columns
@@ -81,7 +133,7 @@ Since these data are sampled at $250$ Hz, we have that each time difference is $
 
 ```{r}
 frames_per_second <- 250
-seconds_per_frame <- 1/frames_per_second
+seconds_per_frame <- 1 / frames_per_second
 time_seq <- seq(0, seconds_per_frame * (405 - 1), by = seconds_per_frame)
 ```
 
@@ -101,17 +153,83 @@ matplot(x = time_seq,
 
 In this section, we'll discuss a number of important issues in data preparation.
 
+For this, we'll use the `fda` package so we need to load it.
+
+```{r, message = FALSE, warning = FALSE}
+library(fda)
+```
+
 ### Issue 1: Smoothing 
 
+* The first issue is representing each sampled time series as a *smooth* function (or curve).
+
+* In the`fda` package, this representation is done using a **basis function representation**.
+
+* In short, we use a linear combination (or weighted sum) of some set of basis functions that *we know*, to approximate each individual curve. Then, under the hood, the data are stored as the combination of the basis (i.e., the known functions) and vector of basis coefficients for an individual curve (i.e., the weights).
+
+* We can choose the basis coefficients based on whether we want to **smooth** or interpolate the raw data.
+
+
+
+#### Demonstration: Representing a single curve
+
+We'll extract the first row of the dataset. We only take the non `NA` values, and take the correponding values for the time argument.
+
+```{r}
+GRF_obs_full <- GRF_matrix[1,]
+GRF_obs <- GRF_obs_full[!is.na(GRF_obs_full)]
+time_seq_obs <- time_seq[seq_len(length(GRF_obs))]
+```
+
+
+```{r, fig.asp = 0.5, fig.width = 12}
+Bspline_basis_k50 <- create.bspline.basis(rangeval = range(time_seq_obs),
+                                           nbasis = 50)
+
+GRF_obs_1_fdSmooth <- smooth.basis(argvals = time_seq_obs,
+                                   y = GRF_obs, 
+                                   fdParobj = Bspline_basis_k50)
+
+par(mfrow = c(1, 2))
+plot(Bspline_basis_k50, knots = FALSE, lty = 1)
+abline(h = 1, lwd = 1.5)
+title("BSpline Basis")
+plot.fd(fd(coef = diag(GRF_obs_1_fdSmooth$fd$coefs[,1]),
+                  Bspline_basis_k50), lty = 1, ylim = c(0, 800))
+points(x = time_seq_obs, GRF_obs, pch = 20, col = "grey")
+lines.fdSmooth(GRF_obs_1_fdSmooth, col = "black", lwd = 1.5)
+title("Weighted BSpline Basis to Represent Curve")
+```
+
+
+**What is happening under the hood?** 
+
+  $\rightarrow$ We have gone from a vector of discrete values to a representation of the functional data in terms of a vector of basis coefficients and a set of basis functions.
+  
+  These are stored as an `fd` object:
+  
+```{r}
+GRF_obs_1_fd <- GRF_obs_1_fdSmooth$fd
+GRF_obs_1_fd[["coefs"]]
+GRF_obs_1_fd[["basis"]]
+```
 
 ### Issue 2: Time Normalization
 
-* Refs: Gellar, Sangalli etc., do not require 
+* The standard functional data analysis software (i.e., the `fda` package) requires the functional data to be represented on a common domain (**Note:** There are some exceptions such as the work of Gellar et al. (2014) and Sangalli et al. (2010) do not require a common domain/ equal length curves). 
 
+* However, in practice many biomechanical time series are of different lengths because people take dhttps://link.springer.com/book/10.1007/978-3-031-68862-1ifferent amounts of time to complete a movement.
+
+* 
+
+#### 2 (a) <u>Common Approach</u>: Resample to Time Normalize and then Smooth
+
+
+#### 2 (b) <u>More Principled Approach</u>: Do Smoothing and Time Normalization Together
 
 ## Data Export
 
-## Summarixing the Data (basics)
+## Summarizing the Data (basics)
 
 Overview of mean functions, variance functions, and functional PCA.
 
@@ -119,3 +237,11 @@ Overview of mean functions, variance functions, and functional PCA.
 ## Conclusion
 
 Final thoughts and next steps.
+
+## References
+
+* Gellar, Jonathan E., Elizabeth Colantuoni, Dale M. Needham, and Ciprian M. Crainiceanu. “Variable-Domain Functional Regression for Modeling ICU Data.” Journal of the American Statistical Association 109, no. 508 (2014): 1425–39. https://doi.org/10.1080/01621459.2014.940044.
+
+* Sangalli, Laura M., Piercesare Secchi, Simone Vantini, and Valeria Vitelli. “K-Mean Alignment for Curve Clustering.” Computational Statistics & Data Analysis 54, no. 5 (2010): 1219–33. https://doi.org/10.1016/j.csda.2009.12.008.
+
+* https://github.com/gsimchoni/mocap `mocap` R package.
