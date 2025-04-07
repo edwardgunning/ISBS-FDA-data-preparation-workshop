@@ -1,5 +1,6 @@
 ISBS Online Symposium
 ================
+Edward Gunning (University of Pennsylvania)
 
 <div style="text-align: center;">
 
@@ -15,6 +16,17 @@ Biomechanics, as part of the ISBS Online Symposium. This document serves
 as a guide for working with time-series data and preparing it for
 functional data analysis in R.
 
+- This tutorial <u>**does**</u> cover, basic data import, formatting,
+  preparation and inspecting techniques. It will teach you how to go
+  from raw biomechanical time series’ to functional data that are ready
+  to be analysed.
+
+- This tutorial <u>**does not**</u> cover more advanced analytical
+  techniques from FDA – we have [a
+  book](https://link.springer.com/book/10.1007/978-3-031-68862-1) and
+  [material from a full one-day
+  course](https://github.com/edwardgunning/ISBS-Short-Course) for this.
+
 ## Reading Time-Series Data
 
 In this workshop, we will use the GaitRec dataset, specifically the
@@ -29,7 +41,7 @@ different durations, some rows contain missing values (`NA`s) where the
 recorded data length varies. Our goal is to preprocess these data,
 preparing them for functional data analysis.
 
-### Step 1: Read in the csv file:
+### Read in the csv file:
 
 There are many options to read in text files in R (e.g., comma or tab
 separated values files). Here, we’ll use base R `read.csv()` function.
@@ -60,6 +72,8 @@ rm(list = paste0("GRF_data_", 1:3))
 ```
 
 ------------------------------------------------------------------------
+
+### Inspecting the loaded data
 
 The data is read in as a data frame, which is useful for storing tabular
 data where the columns are heterogenous in nature (e.g., contains some
@@ -134,16 +148,93 @@ preparation.
 
 ### Issue 1: Smoothing
 
+Demonstrate basis functions + basis representation.
+
+Show smoothing a single curve.
+
+For this, we’ll use the `fda` package so we need to load it.
+
+``` r
+library(fda)
+```
+
+    ## Loading required package: splines
+
+    ## Loading required package: fds
+
+    ## Loading required package: rainbow
+
+    ## Loading required package: MASS
+
+    ## Loading required package: pcaPP
+
+    ## Loading required package: RCurl
+
+    ## Loading required package: deSolve
+
+    ## 
+    ## Attaching package: 'fda'
+
+    ## The following object is masked from 'package:graphics':
+    ## 
+    ##     matplot
+
+``` r
+GRF_obs_full <- GRF_matrix[1,]
+GRF_obs <- GRF_obs_full[!is.na(GRF_obs_full)]
+time_seq_obs <- time_seq[seq_len(length(GRF_obs))]
+
+Bspline_basis_k100 <- create.bspline.basis(rangeval = range(time_seq_obs),
+                                           nbasis = 100)
+
+GRF_obs_1_fdSmooth <- smooth.basis(argvals = time_seq_obs,
+                                   y = GRF_obs, 
+                                   fdParobj = Bspline_basis_k100)
+
+plot(x = time_seq_obs, GRF_obs, pch = 20, col = "grey")
+lines.fdSmooth(GRF_obs_1_fdSmooth, col = "red")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
 ### Issue 2: Time Normalization
 
-- Refs: Gellar, Sangalli etc., do not require
+- The standard functional data analysis software (i.e., the `fda`
+  package) requires the functional data to be represented on a common
+  domain (**Note:** There are some exceptions such as the work of Gellar
+  et al. (2014) and Sangalli et al. (2010) do not require a common
+  domain/ equal length curves).
+
+- However, in practice many biomechanical time series are of different
+  lengths because people take
+  dhttps://link.springer.com/book/10.1007/978-3-031-68862-1ifferent
+  amounts of time to complete a movement.
+
+- 
+
+#### 2 (a) <u>Common Approach</u>: Resample to Time Normalize and then Smooth
+
+#### 2 (b) <u>More Principled Approach</u>: Do Smoothing and Time Normalization Together
 
 ## Data Export
 
-## Summarixing the Data (basics)
+## Summarizing the Data (basics)
 
 Overview of mean functions, variance functions, and functional PCA.
 
 ## Conclusion
 
 Final thoughts and next steps.
+
+## References
+
+- Gellar, Jonathan E., Elizabeth Colantuoni, Dale M. Needham, and
+  Ciprian M. Crainiceanu. “Variable-Domain Functional Regression for
+  Modeling ICU Data.” Journal of the American Statistical Association
+  109, no. 508 (2014): 1425–39.
+  <https://doi.org/10.1080/01621459.2014.940044>.
+
+- Sangalli, Laura M., Piercesare Secchi, Simone Vantini, and Valeria
+  Vitelli. “K-Mean Alignment for Curve Clustering.” Computational
+  Statistics & Data Analysis 54, no. 5 (2010): 1219–33.
+  <https://doi.org/10.1016/j.csda.2009.12.008>.
