@@ -6,7 +6,7 @@ Functional Data Analysis
 - [🖥 Computing Pre-requisites](#-computing-pre-requisites)
   - [R and RStudio](#r-and-rstudio)
 - [⏱️ Schedule](#️-schedule)
-- [Main Tutorial](#main-tutorial)
+- [🎒 Main Tutorial](#-main-tutorial)
   - [Reading Time-Series Data](#reading-time-series-data)
   - [Read in the csv file:](#read-in-the-csv-file)
   - [Inspecting the loaded data](#inspecting-the-loaded-data)
@@ -110,12 +110,13 @@ These times are in British Standard Time (BST):
 
 ------------------------------------------------------------------------
 
-# Main Tutorial
+# 🎒 Main Tutorial
 
 ### Reading Time-Series Data
 
 <details>
 <summary>
+🖱️ Click to Expand 🖱
 </summary>
 
 In this workshop, we will use the GaitRec dataset, specifically the
@@ -171,7 +172,7 @@ print(paste0("read.csv = ", round(runtime_1["elapsed"], 2), " seconds; read_csv 
              round(runtime_3["elapsed"], 2), " seconds"))
 ```
 
-    ## [1] "read.csv = 19.25 seconds; read_csv = 0.95 seconds; fread = 0.49 seconds"
+    ## [1] "read.csv = 19.26 seconds; read_csv = 0.92 seconds; fread = 0.5 seconds"
 
 ``` r
 rm(list = paste0("GRF_data_", 1:3)) # remove the created data objects from our environments
@@ -189,6 +190,7 @@ rm(list = paste0("GRF_data_", 1:3)) # remove the created data objects from our e
 
 <details>
 <summary>
+🖱️ Click to Expand 🖱
 </summary>
 
 The data is read in as a data frame, which is useful for storing tabular
@@ -264,6 +266,7 @@ matplot(x = time_seq,
 
 <details>
 <summary>
+🖱️ Click to Expand 🖱
 </summary>
 
 In this section, we’ll discuss a number of important issues in data
@@ -281,6 +284,7 @@ library(fda)
 
 <details>
 <summary>
+🖱️ Click to Expand 🖱
 </summary>
 
 - The first issue is representing each sampled time series as a *smooth*
@@ -505,6 +509,7 @@ legend("bottom", paste0("lambda = ", lambda_seq),
 
 <details>
 <summary>
+🖱️ Click to Expand 🖱
 </summary>
 
 - We have fitted to a single curve, and we have used the observed time
@@ -702,6 +707,7 @@ title("Chopped")
 
 <details>
 <summary>
+🖱️ Click to Expand 🖱
 </summary>
 
 - We typically want to save iterations of our data at multiple stages in
@@ -734,6 +740,7 @@ GRF_fd <- readRDS(file = "saved-objects/GRF_fd.rds")
 
 <details>
 <summary>
+🖱️ Click to Expand 🖱
 </summary>
 
 Once we have represented our data as an `fd` object, we can apply
@@ -846,6 +853,7 @@ boxplot.fd(GRF_fd)
 
 <details>
 <summary>
+🖱️ Click to Expand 🖱
 </summary>
 
 - Biomechanical data is rich and structured.

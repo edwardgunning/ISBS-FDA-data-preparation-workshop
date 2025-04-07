@@ -67,13 +67,13 @@ These times are in British Standard Time (BST):
 ---
 ---
 
-# Main Tutorial
+# 🎒 Main Tutorial
 
 ### Reading Time-Series Data
 
 <details>
 
-<summary></summary>
+<summary>🖱️ Click to Expand 🖱 </summary>
 
 In this workshop, we will use the GaitRec dataset, specifically the right leg vertical ground reaction force (vGRF) data.
 The data are stored in a comma separated value (CSV) file on the [GaitRec Figshare link](https://figshare.com/articles/dataset/GRF_F_V_RAW_right/11394825?backTo=%2Fcollections%2FGaitRec_A_large-scale_ground_reaction_force_dataset_of_healthy_and_impaired_gait%2F4788012&file=22063200) and can be downloaded directly [here](https://figshare.com/ndownloader/files/22063200).
@@ -118,7 +118,7 @@ rm(list = paste0("GRF_data_", 1:3)) # remove the created data objects from our e
 
 <details>
 
-<summary></summary>
+<summary>🖱️ Click to Expand 🖱 </summary>
 
 The data is read in as a data frame, which is useful for storing tabular data where the columns are heterogenous in nature (e.g., contains some numeric and some factors or strings).
 
@@ -171,7 +171,7 @@ matplot(x = time_seq,
 
 <details>
 
-<summary></summary>
+<summary>🖱️ Click to Expand 🖱 </summary>
 
 In this section, we'll discuss a number of important issues in data preparation.
 
@@ -187,7 +187,7 @@ library(fda)
 
 <details>
 
-<summary></summary>
+<summary>🖱️ Click to Expand 🖱 </summary>
 
 * The first issue is representing each sampled time series as a *smooth* function (or curve).
 
@@ -279,7 +279,7 @@ legend("bottom", paste0("lambda = ", lambda_seq),
 
 <details>
 
-<summary></summary>
+<summary>🖱️ Click to Expand 🖱 </summary>
 
 * We have fitted to a single curve, and we have used the observed time values to define its domain.
 
@@ -424,7 +424,7 @@ title("Chopped")
 
 <details>
 
-<summary></summary>
+<summary>🖱️ Click to Expand 🖱 </summary>
 
 * We typically want to save iterations of our data at multiple stages in the workflow, and will rarely complete analysis in a single interactive session.
 
@@ -449,7 +449,7 @@ GRF_fd <- readRDS(file = "saved-objects/GRF_fd.rds")
 
 <details>
 
-<summary></summary>
+<summary>🖱️ Click to Expand 🖱 </summary>
 
 Once we have represented our data as an `fd` object, we can apply visualisation, summary and analysis functions from the `fda` package. Here are a number of simple visualisation functions that act directly on the `fd` object.
 
@@ -478,7 +478,7 @@ boxplot.fd(GRF_fd)
 
 <details>
 
-<summary></summary>
+<summary>🖱️ Click to Expand 🖱 </summary>
 
 * Biomechanical data is rich and structured.
 
