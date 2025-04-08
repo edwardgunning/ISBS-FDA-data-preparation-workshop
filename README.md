@@ -56,6 +56,10 @@ functional data analysis in R.
   workshop, in the hope that you will use it as part of your own data
   analysis and research.
 
+- You can contact me at <Edward.Gunning@pennmedicine.upenn.edu> if you
+  spot any typos that should be fixed, or have any questions about the
+  material.
+
 ## 🖥 Computing Pre-requisites
 
 ### R and RStudio
@@ -172,7 +176,7 @@ print(paste0("read.csv = ", round(runtime_1["elapsed"], 2), " seconds; read_csv 
              round(runtime_3["elapsed"], 2), " seconds"))
 ```
 
-    ## [1] "read.csv = 18.78 seconds; read_csv = 1.16 seconds; fread = 0.48 seconds"
+    ## [1] "read.csv = 18.89 seconds; read_csv = 1.01 seconds; fread = 0.55 seconds"
 
 ``` r
 rm(list = paste0("GRF_data_", 1:3)) # remove the created data objects from our environments
@@ -529,20 +533,20 @@ legend("bottom", paste0("lambda = ", lambda_seq),
   domains of each observation to use them with the `fda` package.
 
 - The most common approach, particularly for periodic data or data with
-  very clearly defined start and end points, is the linearly time (or
-  length) normalise the data. We simply, linearly stretch or compress
-  the time values so that the start and end of each curve match, and we
-  can treat them as data defined on a common domain.
+  very clearly defined start and end points, is to linearly time (or
+  length) normalise. That is, we linearly stretch or compress the time
+  values so that the start and end of each curve match, and we can treat
+  them as data defined on a common domain.
 
 #### 2 (a) <u>Common Approach</u>: Resample to Time Normalize and then Smooth
 
 - Use a cubic spline to interpolate the data to $101$ points (often done
-  in motion capture soft. Do this to each row of the data.
+  in motion capture software), Do this to each row of the data.
 
 - We use `apply()` to do the same operation to each row of the data – we
   could also do it in a loop.
 
-- This gives us a $200 \times 100$ matrix that we can pass to
+- This gives us a $200 \times 101$ matrix that we can pass to
   `smooth.basis()` to smooth/ represent all the curves collectively.
 
 ``` r
@@ -565,7 +569,7 @@ matplot(x = time_seq_normalized,
 
 ![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
-- We can just pass the $101\times200$ matrix (after transposing) to
+- We can pass the $101\times200$ matrix (after transposing) to
   `smooth.basis()` and it will do the smoothig/ representation of all
   the curves collectively.
 
@@ -585,13 +589,13 @@ plot(GRF_fd)
 
 #### 2 (b) <u>More Principled Approach</u>: Do Smoothing and Time Normalization Together
 
-- What we actually do when we use cubic spline interpolation, is
-  interpolate onto a B-spline basis and evaluate at $101$ points.
+- When we use cubic spline interpolation, we actually just interpolate
+  onto a B-spline basis and evaluate at $101$ points.
 
 - We can actually do all of this using the `fda` package, and this might
   be preferable for a few reasons:
 
-  1.  We avoid an intermediate resampling steps, which may distort/ lose
+  1.  We avoid an intermediate resampling step, which may distort/ lose
       information (though maybe not if the data are smooth enough and
       the grid of time points is fine enough)
   2.  If the data *are* noisy, we don’t really want to interpolate noise
@@ -647,7 +651,7 @@ title("Approach 2")
 #### <u>Other approaches and further thoughts</u>
 
 - If you time normalise, you should carry through curve length as an
-  additional covariate. Don’t just discard it!
+  additional parameter. Don’t just discard it!
 
 - There are some other approaches people have considered. They don’t
   make sense in this context (I think), but I’m demonstrating them just
@@ -711,14 +715,14 @@ title("Chopped")
 </summary>
 
 - We typically want to save iterations of our data at multiple stages in
-  the workflow, and will rarely complete analysis in a single
+  the workflow, and will rarely complete an analysis in a single
   interactive session.
 
 - Therefore, we need to be able to save and import the objects that we
   create.
 
 - The canonical way to store R objects, such as the `fd` object we have
-  created, is in “R’s custom binary format called RDS” (Wickhama and
+  created, is in “R’s custom binary format called RDS” (Wickham and
   Grolemund, 2017).
 
 - The functions to save and read RDS objects are straightforward:
@@ -893,7 +897,8 @@ boxplot.fd(GRF_fd)
 - Ramsay J (2024). *fda: Functional Data Analysis*. R package version
   6.1.8, <https://CRAN.R-project.org/package=fda>.
 
-- <https://github.com/gsimchoni/mocap> `mocap` R package.
+- Wickham, H., & Grolemund, G. (2017). R for data science (Vol. 2).
+  Sebastopol, CA: O’Reilly.
 
 ## Session Info for Reproducibility
 
