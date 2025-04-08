@@ -172,7 +172,7 @@ print(paste0("read.csv = ", round(runtime_1["elapsed"], 2), " seconds; read_csv 
              round(runtime_3["elapsed"], 2), " seconds"))
 ```
 
-    ## [1] "read.csv = 19.26 seconds; read_csv = 0.92 seconds; fread = 0.5 seconds"
+    ## [1] "read.csv = 18.78 seconds; read_csv = 1.16 seconds; fread = 0.48 seconds"
 
 ``` r
 rm(list = paste0("GRF_data_", 1:3)) # remove the created data objects from our environments
